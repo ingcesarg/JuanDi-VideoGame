@@ -1,0 +1,50 @@
+# Dependencias y archivos generados
+node_modules/
+dist/
+coverage/
+.vite/
+.cache/
+*.tsbuildinfo
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100/
+.Trashes/
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux y archivos temporales de editores
+.Trash-*/
+.nfs*
+*~
+*.swp
+*.swo
+*.tmp
+
+# Configuración local de IDE
+.idea/
+.vscode/
+*.code-workspace
+
+# Logs locales
+*.log
+
+# Variables de entorno locales; conservar plantillas
+.env
+.env.*
+!.env.example
+!.env.*.example
+!.env.sample
+!.env.template
+
+# Configuración personal de agentes; conservar instrucciones y skills
+.claude/settings.local.json

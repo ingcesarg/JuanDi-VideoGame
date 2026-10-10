@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#101d2b" />
+  <meta name="description" content="Ayuda al Club GOCA a recuperar su gloria. Primer prototipo jugable de JuanDiVoley." />
+  <title>JuanDiVoley · Club GOCA</title>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="JuanDiVoley, inicio"><span class="brand-ball">◈</span><span>JUANDI<span class="lime">VOLEY</span><small>LA GLORIA EMPIEZA EN EL BARRIO</small></span></a>
+      <div class="top-meta"><span class="badge"><i></i> PROTOTIPO 01</span><button id="help-button" class="icon-button" aria-label="Ver controles y reglas">? <span>Cómo jugar</span></button></div>
+    </header>
+
+    <main>
+      <div class="page-heading"><div><p class="eyebrow">CLUB GOCA / CANCHA DEL BARRIO</p><h1>Una cancha. <span>Muchas ganas.</span></h1></div><span class="session-label">PARTIDO AMISTOSO <b>01</b></span></div>
+      <section class="game-layout" aria-label="Partido de voleibol">
+        <aside class="left-panel">
+          <div class="panel-label">EN LA CANCHA <span>2 VS 2</span></div>
+          <div class="team-block"><span class="crest">G<span>GOCA</span></span><p>TU EQUIPO<strong>Club GOCA</strong><span>Volvamos a lo más alto.</span></p></div>
+          <div class="roster"><div id="player-0" class="roster-row active"><span class="shirt">07</span><div><strong>Leo</strong><small>Remate · Defensa</small></div><span class="active-dot"></span></div><div id="player-1" class="roster-row"><span class="shirt">12</span><div><strong>Vale</strong><small>Recepción · Armado</small></div><span class="active-dot"></span></div></div>
+          <p class="switch-hint"><kbd>Tab</kbd> Cambia de jugador</p>
+          <div class="opponent"><span class="opponent-icon">↯</span><div><small>EL RIVAL</small><strong>Los del Parque</strong><span>Rayo #03 · Luna #09</span></div></div>
+          <div class="match-details"><div><span>Dificultad</span><b><i></i> Principiante</b></div><div><span>Formato</span><b>1 set · 15 puntos</b></div><div><span>Victoria</span><b>2 puntos de ventaja</b></div></div>
+          <div class="coach-note"><span>✦</span><p><strong>El consejo del club</strong>Busca el espacio libre, no al rival. Las zonas verdes te dan una pista.</p></div>
+        </aside>
+
+        <div class="arena-column">
+          <div class="scoreboard"><div class="score-team"><span class="team-dot home-dot"></span><b>GOCA</b><span id="serve-home" class="serve-dot" aria-label="GOCA sirve">●</span></div><div class="score-center"><strong id="score-home">0</strong><span>SET 1<small>A 15</small></span><strong id="score-away">0</strong></div><div class="score-team away"><span id="serve-away" class="serve-dot" aria-label="Rival sirve" hidden>●</span><b>PARQUE</b><span class="team-dot away-dot"></span></div></div>
+          <div class="arena" id="arena">
+            <canvas id="court" width="1000" height="620" tabindex="0" aria-label="Cancha de voleibol. Usa las flechas para moverte, Espacio para golpear y Tab para cambiar de jugador."></canvas>
+            <div class="arena-tag"><span class="live-dot"></span> CANCHA DEL BARRIO <span>BOGOTÁ · 17:30</span></div>
+            <button id="pause-button" class="pause-button" aria-label="Pausar partido" hidden>Ⅱ</button>
+            <div id="home-overlay" class="overlay home-overlay"><div class="start-card"><span class="mini-label">BIENVENIDO AL CLUB</span><h2>Un nuevo comienzo<br>para <em>GOCA.</em></h2><p>Recibe, arma y encuentra el espacio.<br>La próxima gran jugada es tuya.</p><button id="play-button" class="primary">Entrar a la cancha <span>↗</span></button><small>Un jugador · Teclado · Contra la máquina</small></div></div>
+            <div id="pause-overlay" class="overlay" hidden><div class="modal-card"><span class="mini-label">TÓMATE UN RESPIRO</span><h2>Partido en pausa</h2><p>La cancha te espera. No has perdido ningún punto.</p><button id="resume-button" class="primary">Seguir jugando <span>→</span></button></div></div>
+            <div id="results-overlay" class="overlay" hidden><div class="modal-card results-card"><span class="mini-label">PARTIDO TERMINADO</span><h2 id="result-title"></h2><div id="result-score" class="result-score"></div><div class="result-stats"><div><b id="result-placement">0</b><span>Remates a espacios</span></div><div><b id="result-streak">0</b><span>Mejor racha</span></div></div><p id="result-tip"></p><button id="rematch-button" class="primary">Vamos por la revancha <span>↗</span></button></div></div>
+          </div>
+          <div class="match-status"><span id="status-icon">✦</span><p id="status" role="status" aria-live="polite">Tu equipo está listo. Es hora de volver a jugar.</p><span class="court-legend"><i></i> Espacio libre</span></div>
+        </div>
+
+        <aside class="right-panel"><div class="panel-label">DALE UN IMPULSO <span>✦</span></div><h2>Tus poderes</h2><p class="panel-description">Cada uso cuenta.<br>Elige el momento de brillar.</p>
+          <button class="power-card selected" id="jump-card" aria-label="Seleccionar súper salto"><span class="power-art jump-art">↟</span><div class="power-title"><strong>Súper salto</strong><b id="jump-stock">2</b></div><p>Más altura. Llega donde<br>nadie te espera.</p><div class="power-footer"><span id="jump-pending">0 preparados</span><span id="jump-selected">E ACTIVAR</span></div></button>
+          <button class="power-card" id="spike-card" aria-label="Seleccionar remate potente"><span class="power-art spike-art">ϟ</span><div class="power-title"><strong>Remate potente</strong><b id="spike-stock">2</b></div><p>Dale velocidad extra<br>a tu próximo remate.</p><div class="power-footer"><span id="spike-pending">0 preparados</span><span id="spike-selected">Q ELEGIR</span></div></button>
+          <p class="power-help"><kbd>Q</kbd> Elegir <kbd>E</kbd> Preparar</p><div class="pickup-note"><span>◇</span><p>Recoge los objetos de la cancha para sumar usos.<small>Sin caducidad ni espera entre usos.</small></p></div>
+        </aside>
+      </section>
+      <div class="controls-strip"><span class="controls-title">TU PRÓXIMA JUGADA</span><span><kbd>↑</kbd><kbd>←</kbd><kbd>↓</kbd><kbd>→</kbd> Mover / apuntar</span><span><kbd class="wide">Espacio</kbd> Golpe contextual</span><span><kbd>Tab</kbd> Cambiar jugador</span><span><kbd>Esc</kbd> Pausa</span></div>
+      <footer><span>HECHO PARA JUGAR EN FAMILIA <span class="lime">✦</span></span><p>Prototipo: 2 por equipo, sin rotación ni falta por doble contacto. Máximo 3 contactos; bloqueo no cuenta. Saque desde la posición actual.</p></footer>
+    </main>
+  </div>
+  <dialog id="help-dialog"><div class="help-content"><button id="close-help" class="close-help" aria-label="Cerrar instrucciones">×</button><p class="eyebrow">GUÍA RÁPIDA</p><h2>Juega con cabeza.<br>Y con muchas ganas.</h2><dl><dt>Flechas</dt><dd>Mueve al jugador activo. Al golpear, dirige el saque o remate: izquierda/derecha cambia el lado; arriba apunta profundo y abajo cerca de la red.</dd><dt>Espacio</dt><dd>Saca, recibe, arma o remata según el contacto. Acércate al círculo de caída y pulsa al bajar la pelota. Cerca de la red, salta para bloquear una pelota rival.</dd><dt>Tab</dt><dd>Cambia entre Leo y Vale. Tu compañero juega automáticamente; el jugador activo necesita que pulses para golpear.</dd><dt>Q / E</dt><dd>Q elige un poder, E prepara un uso. Súper salto mejora tu próximo salto; remate potente mejora tu próximo remate. Los usos preparados se acumulan sin caducar.</dd><dt>Escape</dt><dd>Pausa el partido. Cambiar de ventana también pausa. Pulsa Seguir jugando para reanudar.</dd></dl><div class="help-rules"><strong>Una adaptación para este prototipo</strong><p>Un set a 15 con dos puntos de ventaja. Máximo tres contactos; bloqueo no cuenta. Sin rotación ni sanción por doble contacto individual. El saque sale de la posición actual sin falta por posición. Estas simplificaciones son del juego, no las reglas completas del voleibol.</p><p>Gana usos recogiendo objetos y con puntos de remate a espacio libre. Torneos, inglés, rompecabezas y multijugador llegarán en etapas posteriores.</p></div></div></dialog>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

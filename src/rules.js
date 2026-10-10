@@ -17,8 +17,10 @@ export function awardPoint(match, team, reason) {
   if (team === 0 && match.lastAttack?.team === 0 && match.lastAttack.free) {
     match.powers.stock.spike++;
     match.stats.placementPoints++;
+    match.notice = { text: 'Premio por colocación · +1 Remate potente disponible · pulsa Q para elegir y E para preparar', remaining: CONFIG.noticeSeconds };
   }
   match.item = null;
+  match.aim = null;
   match.winner = setWinner(match.score);
   match.phase = match.winner === null ? 'point' : 'results';
   match.timer = CONFIG.pointDelay;

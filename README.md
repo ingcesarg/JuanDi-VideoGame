@@ -1,4 +1,4 @@
-# JuanDiVoley · Prototipo 01
+# JuanDiVoley · Claridad y control
 
 Ayuda al Club GOCA a recuperar su gloria, empezando en una cancha de barrio. Este primer prototipo para computador permite jugar **2 contra 2 contra la máquina**, en dificultad Principiante, un set a 15 y con dos puntos de ventaja.
 
@@ -23,20 +23,20 @@ npm run preview  # Prueba esa construcción localmente
 
 | Tecla | Acción |
 |---|---|
-| Flechas | Mover al jugador activo; dirigir el saque o remate al golpear |
-| Espacio | Saque, recepción, armado, remate o salto para bloqueo según contexto |
+| Flechas | Mover; durante apuntado elegir una de seis zonas; dirigir el saque al golpear |
+| Espacio | Acción contextual; en ataque abre apuntado y una nueva pulsación confirma |
 | Tab | Cambiar entre Leo y Vale |
 | Q | Elegir súper salto o remate potente |
 | E | Preparar un uso del poder elegido |
 | Escape | Pausar; el botón **Seguir jugando** reanuda |
 
-La cancha necesita el foco del teclado: puedes hacer clic en ella para recuperarlo. Las teclas del juego solo se interceptan con la cancha enfocada. Abrir **Cómo jugar**, salir de la ventana o cambiar de pestaña pausa el partido; reanudar es explícito.
+La cancha necesita el foco del teclado: puedes hacer clic en ella para recuperarlo. Las teclas del juego solo se interceptan con la cancha enfocada. Abrir **Cómo jugar**, sacar el foco de la cancha, salir de la ventana o cambiar de pestaña pausa con motivo visible; volver no reanuda. Pulsa **Seguir jugando** con ratón o teclado: se limpia la entrada anterior y se conserva el apuntado, incluida zona y tiempo restante.
 
-Observa el círculo claro de caída. Acércate y pulsa Espacio mientras baja la pelota; aparece una indicación si está a tu alcance. La primera recepción va al compañero, el segundo contacto arma cerca de la red y el tercero remata. El compañero se mueve y golpea automáticamente, pero el jugador activo necesita tu acción. Tab permite tomar control del compañero que va a recibir.
+Observa el círculo claro de caída. Acércate y pulsa Espacio mientras baja la pelota; aparece una indicación si está a tu alcance. La recepción y el ataque siempre necesitan tu acción, aunque cambies varias veces con Tab. El compañero se mueve y solo puede golpear automáticamente el segundo contacto para armar; si lo seleccionas, debes pulsar Espacio también para ese contacto. La pantalla indica tu recepción, el armado y tu ataque. Durante apuntado Tab está bloqueado hasta concluir la acción.
 
-En el saque o remate, izquierda y derecha eligen el lado del campo rival; arriba apunta profundo y abajo hacia la red. Sin dirección se apunta al centro. Las zonas verdes muestran espacios alejados de los rivales. Cerca de la red, pulsar Espacio ante una pelota atacante alta inicia un salto de bloqueo; para rematar una pelota alta, acércate y pulsa al bajar. Hay una pequeña tolerancia de contacto, no un golpe automático por mantener Espacio.
+En el saque conservas dirección con flechas al golpear. En el remate, pulsa Espacio cuando estés a alcance: el atacante queda quieto y la simulación se ralentiza durante un máximo provisional de dos segundos. Flechas izquierda/derecha eligen columna; arriba elige profunda y abajo corta. Hay seis zonas y por defecto centro profunda. Suelta Espacio y vuelve a pulsarlo para confirmar. Al vencer el plazo se intenta rematar al destino actual; si la pelota sale de alcance, se cancela y no se gasta el remate preparado. Solo se permite una ventana por oportunidad. Las zonas verdes muestran espacios alejados de los rivales. Cerca de la red, pulsar Espacio ante una pelota atacante alta inicia un salto de bloqueo; para rematar una pelota alta, acércate y pulsa al bajar. Hay una pequeña tolerancia de contacto, no un golpe automático por mantener Espacio.
 
-Cada partido empieza con dos usos de cada poder. E descuenta uno y lo deja preparado hasta la próxima acción humana compatible: súper salto para saltar/bloquear y remate potente para rematar. Puedes preparar varios seguidos, sin espera ni caducidad; cada acción consume uno. El compañero no consume tus mejoras pendientes. Recoger un objeto suma un uso y ganar un punto mediante remate a espacio libre suma un uso de remate potente. No se usan créditos ni compras en esta etapa.
+Cada partido empieza con dos usos de cada poder. E descuenta uno y lo deja preparado hasta la próxima acción humana compatible: súper salto para saltar/bloquear y remate potente para rematar. Puedes preparar varios seguidos, sin espera ni caducidad; cada acción consume uno. El compañero no consume tus mejoras pendientes. Pasar con el jugador activo por el área de un objeto suma un disponible una sola vez (también saltando); el compañero no recoge. La recogida indica el poder y cómo seleccionarlo y prepararlo, sin activarlo. No se recoge durante pausa o apuntado. Recoger un objeto suma un uso y ganar un punto mediante remate a espacio libre suma un uso de remate potente. No se usan créditos ni compras en esta etapa.
 
 ## Adaptaciones del prototipo
 
@@ -56,6 +56,9 @@ Son adaptaciones del juego, no las reglas completas del voleibol. Torneos, mapa,
 - `src/game.js`: estados, acciones y simulación; `src/rules.js`: puntos y contactos.
 - `src/physics.js`: trayectorias, red y caída; `src/powers.js`: inventario.
 - `src/render.js`: cancha y personajes; `src/input.js`: entrada; `src/main.js`: pantallas y bucle.
-- `test/game.test.js`: verificaciones sin navegador.
+- `test/game.test.js`, `test/clarity.test.js`, `test/input.test.js`: reglas, casos de claridad y entrada/reloj sin navegador.
+- `src/clock.js`: física con pasos fijos y tiempo real activo para el apuntado.
 
-Las cantidades y teclas son propuestas de prueba, aún pendientes de confirmar con Juan Diego. Consulta [la guía familiar](docs/playtest.md) y [el registro de verificación](docs/verification.md).
+El usuario confirmó un resultado satisfactorio de las pruebas; las cantidades y teclas se mantienen para esta entrega. Consulta [la guía familiar](docs/playtest.md) y [el registro de verificación](docs/verification.md).
+
+El change `match-clarity-and-control` refina el prototipo inicial. Consulta [los contratos y reproducciones](docs/match-clarity-contracts.md). La validación fue confirmada por el usuario y no requirió ajustes adicionales. Las 26 tareas están completas. Las especificaciones vigentes están reconciliadas en `openspec/specs` y ambos changes completados están en `openspec/changes/archive`.

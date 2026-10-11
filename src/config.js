@@ -8,6 +8,7 @@ export const CONFIG = {
   serveTime: 2.3, receiveTime: 1.45, setTime: 1.55, spikeTime: 1.25,
   pointDelay: 1.8, rivalServeDelay: 1.5, freeRadius: 2.25,
   initialPowers: 2, targetScore: 15,
+  victoryCredits: 10, powerPrices: { jump: 5, spike: 5 },
   aimScale: 0.15, aimSeconds: 2, pickupRadius: 0.65, noticeSeconds: 2.8,
 };
 export const POWER_NAMES = { jump: 'Súper salto', spike: 'Remate potente' };

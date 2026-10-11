@@ -1,3 +1,5 @@
+import { emitPresentation, clearPresentation } from './presentation.js';
+import { difficultyProfile } from './difficulty.js';
 import { CONFIG, clamp, distance, POWER_NAMES } from './config.js';
 import { createPowers, activatePower, consumePower, selectPower, collectItem } from './powers.js';
 import { awardPoint, registerContact, landingWinner } from './rules.js';
@@ -19,10 +21,12 @@ export function contactContext(m) {
   return n === 1 ? 'Tu recepción · tú debes pulsar Espacio' : n === 2 ? 'Armado · compañero asistido o Espacio si lo seleccionas' : n === 3 ? 'Tu ataque · acércate y pulsa Espacio para apuntar' : 'Defiende la devolución rival';
 }
 
-export function createMatch(random = Math.random) {
+export function createMatch(random = Math.random, options = {}) {
   const match = {
+    difficulty: difficultyProfile(options.difficulty).id,
     phase: 'serve', score: [0, 0], server: 0, active: 0, winner: null,
     timer: 0, elapsed: 0, contacts: 0, lock: 0, flight: 0, random,
+    presentationId: 0, presentationEvents: [],
     aim: null, aimUsedFlight: null, notice: null, pauseReason: '',
     players: [
       { id: 0, team: 0, name: 'Leo', number: 7, x: 3, y: 15, z: 0, vz: 0, attempt: 0 },
@@ -65,6 +69,7 @@ export function canHit(m, p) {
 export function jump(m, p) {
   if (p.z > 0.01) return false;
   const powered = p.id === m.active && consumePower(m.powers, 'jump');
+  emitPresentation(m, powered ? 'superJump' : 'jump', p);
   p.vz = powered ? CONFIG.superJumpSpeed : CONFIG.jumpSpeed;
   p.action = { kind: powered ? 'superJump' : 'jump', powered, remaining: 1 };
   if (p.id === m.active) notify(m, powered ? 'Súper salto ejecutado · 1 preparado consumido' : 'Salto normal · busca la pelota en el aire');
@@ -89,6 +94,7 @@ export function serve(m, direction = { x: 0, y: 0 }) {
   launch(m.ball, attackTarget(m, p, direction), CONFIG.serveTime);
   m.flight++;
   m.lock = CONFIG.contactLock;
+  emitPresentation(m, 'serve', p);
   m.message = p.team === 0 ? '¡Saque GOCA! Prepárate para la devolución' : '¡Recibe! Acércate al círculo de caída';
   return true;
 }
@@ -129,6 +135,7 @@ export function hit(m, p, direction = { x: 0, y: 0 }, block = false, aimedTarget
     m.flash = powered ? 0.7 : 0;
     if (powered) notify(m, `Remate potente ejecutado · 1 preparado consumido · ${target.label ?? 'destino conservado'}`);
   }
+  emitPresentation(m, p.action.powered && p.action.kind === 'spike' ? 'powerSpike' : p.action.kind, p);
   launch(m.ball, target, duration, height);
   m.flight++;
   m.lock = CONFIG.contactLock; m.lastHitter = p.id;
@@ -201,6 +208,7 @@ function keepInCourt(p) {
 }
 
 export function updateAI(m, dt) {
+  const profile = difficultyProfile(m.difficulty);
   const projected = predict(m.ball, 1.65);
   const team = projected.y > CONFIG.netY ? 0 : 1;
   const candidates = m.players.filter(p => p.team === team);
@@ -210,14 +218,14 @@ export function updateAI(m, dt) {
   for (const p of m.players) {
     if (p.id === m.active) continue;
     const target = p.id === receiver.id ? projected : { x: p.id % 2 === 0 ? 3 : 7, y: p.team === 0 ? 12.2 : 5.8 };
-    moveTo(p, target, p.team === 1 ? CONFIG.rivalSpeed : CONFIG.aiSpeed, dt);
+    moveTo(p, target, p.team === 1 ? profile.rivalSpeed : CONFIG.aiSpeed, dt);
     if (p.id === receiver.id && m.ball.vz < 0 && distance(p, m.ball) < CONFIG.contactRadius) {
       const count = m.ball.lastTeam === p.team ? m.contacts : 0;
       // Tab cambia selección, nunca la responsabilidad de recepción o ataque.
       if (p.team === 0 && count !== 1) continue;
       if (count >= 2 && m.ball.z > 2.3 && m.ball.z < 4) jump(m, p);
       if (canHit(m, p) && p.missedFlight !== m.flight) {
-        if (p.team === 1 && m.random() < CONFIG.rivalMissChance) p.missedFlight = m.flight;
+        if (p.team === 1 && m.random() < profile.rivalMissChance) p.missedFlight = m.flight;
         else hit(m, p);
       }
     }
@@ -273,6 +281,7 @@ export function update(m, simulationDt, direction = { x: 0, y: 0 }, realDt = sim
     const type = m.item.type;
     collectItem(m);
     const instructions = type === m.powers.selected ? 'pulsa E para preparar' : 'selecciona con Q y pulsa E para preparar';
+    emitPresentation(m, 'pickup', active);
     notify(m, `Objeto recogido · +1 ${POWER_NAMES[type]} disponible · ${instructions}`);
     m.message = m.notice.text; m.flash = 0.5;
   }
@@ -289,11 +298,16 @@ export function powerAction(m, select = false) {
   if (select) {
     selectPower(m.powers);
     m.message = `${POWER_NAMES[m.powers.selected]} seleccionado · E prepara un uso, no lo ejecuta aún`;
-  } else m.message = activatePower(m.powers) ? `${POWER_NAMES[m.powers.selected]} · 1 disponible → 1 preparado · se usa en tu próxima acción compatible` : 'Sin usos disponibles · recoge un objeto en la cancha';
+  } else {
+    const activated = activatePower(m.powers);
+    if (activated) emitPresentation(m, 'prepare', m.players[m.active]);
+    m.message = activated ? `${POWER_NAMES[m.powers.selected]} · 1 disponible → 1 preparado · se usa en tu próxima acción compatible` : 'Sin usos disponibles · recoge un objeto en la cancha';
+  }
   notify(m, m.message);
 }
 export function pause(m, reason = 'Pausa manual') {
   if (!['serve', 'rally', 'point'].includes(m.phase)) return;
+  clearPresentation(m);
   m.pauseReason = reason;
   m.resumePhase = m.phase; m.phase = 'paused';
   m.players.forEach(p => { p.attempt = 0; });

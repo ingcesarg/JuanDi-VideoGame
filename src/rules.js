@@ -1,3 +1,4 @@
+import { emitPresentation } from './presentation.js';
 import { CONFIG } from './config.js';
 
 export function setWinner(score) {
@@ -23,6 +24,7 @@ export function awardPoint(match, team, reason) {
   match.aim = null;
   match.winner = setWinner(match.score);
   match.phase = match.winner === null ? 'point' : 'results';
+  emitPresentation(match, match.winner === null ? 'point' : 'result');
   match.timer = CONFIG.pointDelay;
   match.message = `${team === 0 ? '¡Punto GOCA!' : 'Punto de Los del Parque'} · ${reason}`;
   return true;

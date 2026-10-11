@@ -1,6 +1,6 @@
 # JuanDiVoley · Claridad y control
 
-Ayuda al Club GOCA a recuperar su gloria, empezando en una cancha de barrio. Este primer prototipo para computador permite jugar **2 contra 2 contra la máquina**, en dificultad Principiante, un set a 15 y con dos puntos de ventaja.
+Ayuda al Club GOCA a recuperar su gloria, empezando en una cancha de barrio. Este primer prototipo para computador permite jugar **2 contra 2 contra la máquina**, en dificultad Principiante o Normal, un set a 15 y con dos puntos de ventaja.
 
 ## Ejecutar
 
@@ -62,3 +62,31 @@ Son adaptaciones del juego, no las reglas completas del voleibol. Torneos, mapa,
 El usuario confirmó un resultado satisfactorio de las pruebas; las cantidades y teclas se mantienen para esta entrega. Consulta [la guía familiar](docs/playtest.md) y [el registro de verificación](docs/verification.md).
 
 El change `match-clarity-and-control` refina el prototipo inicial. Consulta [los contratos y reproducciones](docs/match-clarity-contracts.md). La validación fue confirmada por el usuario y no requirió ajustes adicionales. Las 26 tareas están completas. Las especificaciones vigentes están reconciliadas en `openspec/specs` y ambos changes completados están en `openspec/changes/archive`.
+
+## Créditos y tienda local
+
+Cada victoria concede 10 créditos una sola vez. Perder no resta saldo. En inicio y resultados puedes comprar un uso de súper salto o remate potente por 5 créditos. La reserva comprada se guarda en este navegador y se añade, completa, a los dos usos gratuitos de cada poder al comenzar el próximo partido o revancha.
+
+Los usos transferidos pertenecen a ese partido. No se guarda una partida en curso: recargar pierde la partida y sus usos sobrantes. Los objetos y premios por colocación siguen siendo recursos del partido; no se convierten en reserva. Saldo y reserva son locales al navegador y origen, con una pestaña activa. Si no se puede guardar, aparece un aviso y puedes seguir con progreso temporal de sesión.
+
+`src/progress.js` gestiona el perfil versionado y las operaciones de premio/compra/transferencia; `test/progress.test.js` cubre persistencia y fallos. El premio y precios se configuran en `src/config.js`; se mantienen tras la confirmación de prueba exitosa del usuario.
+
+## Dificultad de voleibol
+
+Elige Principiante o Normal antes de entrar a la cancha y en resultados antes de revancha. La elección se conserva durante la sesión; recargar vuelve a Principiante. El nivel queda fijo durante el partido y se muestra en cancha y resultados; cambiar la elección del siguiente partido no cambia el resultado anterior.
+
+Principiante conserva los rivales y pistas anteriores. Normal aumenta velocidad rival de 3 a 3,8, reduce la probabilidad de fallo de 0,16 a 0,08 y muestra pistas al 60 % de tamaño. Controles, seis zonas de apuntado, poderes, créditos y reglas se mantienen. Los perfiles están en `src/difficulty.js`, con pruebas en `test/difficulty.test.js`. El usuario confirmó que se percibe el cambio en dificultad y legibilidad; se mantienen estos parámetros.
+
+## Sonido y movimiento
+
+Abre **Sonido y movimiento** en la cabecera para activar o silenciar efectos, probar sonido, ajustar volumen y reducir movimiento decorativo. Durante un partido, abrir ajustes pausa; cerrar no reanuda: pulsa **Seguir jugando**. Las flechas del control de volumen no controlan jugadores.
+
+Sin preferencias previas, comienza silenciado y con volumen 30 %. Audio requiere un gesto explícito y sigue siendo opcional. Las preferencias se guardan aparte de créditos/reserva; movimiento reducido usa inicialmente la preferencia del sistema. Si no se puede guardar o reproducir audio, aparece aviso y el juego continúa. Pausa y silencio detienen sonidos; reanudar no reproduce eventos acumulados.
+
+El render incorpora uniformes sombreados, detalles de cancha, movimiento de piernas, transición de brazos y señales breves de contacto/poder. Movimiento reducido elimina oscilaciones y partículas; conserva posturas, texto, pistas y física. La vista sigue fija y el arte sigue siendo provisional. Música y cámaras dinámicas quedan para otras entregas.
+
+Módulos: `src/presentation.js` (eventos), `src/preferences.js` (preferencias independientes), `src/audio.js` (síntesis original) y `test/presentation.test.js` (ciclo, degradación y render).
+
+El plan de progresión local, dificultad Normal y presentación audiovisual está validado por el usuario. Sus tres changes completos están archivados en `openspec/changes/archive` y sus contratos vigentes consolidados en las 15 capacidades de `openspec/specs`.
+
+Los poderes tienen sonidos propios al ejecutarse: súper salto con barrido ascendente y destello agudo; remate potente con estallido de ruido y golpe grave contundente. Preparar con E conserva su señal separada.

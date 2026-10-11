@@ -58,7 +58,7 @@ El sistema SHALL simular altura, gravedad y red, otorgar punto al rival del camp
 - **THEN** colisiona con la red en lugar de atravesarla libremente
 
 ### Requirement: Lectura de espacios en Principiante
-El sistema SHALL resaltar sectores libres según posiciones actuales de los rivales y registrar remates dirigidos a dichos sectores sin garantizar un punto.
+El sistema SHALL resaltar sectores libres según posiciones actuales de los rivales y registrar remates dirigidos a dichos sectores sin garantizar un punto. Principiante SHALL conservar pistas actuales y Normal SHALL mostrar pistas más pequeñas conforme a `volleyball-difficulty`, sin alterar las seis zonas de apuntado ni el criterio de premios por colocación.
 
 #### Scenario: Rivales se desplazan
 - **WHEN** los rivales dejan libre otro sector del campo

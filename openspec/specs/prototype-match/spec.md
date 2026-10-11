@@ -6,7 +6,7 @@ Definir el partido inicial, puntuación, presentación y revancha de JuanDiVoley
 ## Requirements
 
 ### Requirement: Inicio de partido en navegador
-El sistema SHALL ofrecer una interfaz en español con controles y simplificaciones, y permitir iniciar un partido de Club GOCA contra la máquina, dos jugadores por equipo, dificultad Principiante y un set a 15 puntos.
+El sistema SHALL ofrecer una interfaz en español con controles y simplificaciones, y permitir iniciar un partido de Club GOCA contra la máquina, dos jugadores por equipo, dificultad seleccionable Principiante o Normal, con Principiante por defecto, y un set a 15 puntos.
 
 #### Scenario: Comenzar a jugar
 - **WHEN** el usuario elige jugar desde el inicio
